@@ -24,7 +24,7 @@ def main():
                     total += int(match.group())
                     not_found = False
             # look below
-            if not_found and y < len(rows)-1:
+            if not_found and y < len(rows) - 1:
                 below = rows[y + 1][span_0:span_1]
                 if below != "." * len(below):
                     print("below", match, y, below)
@@ -45,4 +45,48 @@ def main():
     print(total)
 
 
-main()
+def star2():
+    numbers = {}
+    symbols = {}
+
+    with open("../input.txt") as f:
+        y = 0
+        for line in f:
+            line = line.strip()
+            for match in re.finditer(r"\d+", line):
+                for x in range(match.start(), match.end()):
+                    numbers[(y, x)] = match
+            for match in re.finditer(r"[^\d.]", line):
+                symbols[y, match.start()] = match
+            y += 1
+
+    total = 0
+    for location, match in symbols.items():
+        y, x = location
+        if match.group() == "*":
+            parts = []
+            # above
+            for offset in range(-1, 2):
+                search = (y - 1, x + offset)
+                if search in numbers and numbers[search] not in parts:
+                    parts.append(numbers[search])
+            # below
+            for offset in range(-1, 2):
+                search = (y + 1, x + offset)
+                if search in numbers and numbers[search] not in parts:
+                    parts.append(numbers[search])
+            # before
+            search = (y, x - 1)
+            if search in numbers and numbers[search] not in parts:
+                parts.append(numbers[search])
+            # after
+            search = (y, x + 1)
+            if search in numbers and numbers[search] not in parts:
+                parts.append(numbers[search])
+
+            if len(parts) == 2:
+                total += int(parts[0].group()) * int(parts[1].group())
+
+    print(total)
+
+star2()

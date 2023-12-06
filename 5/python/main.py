@@ -31,11 +31,10 @@ class Map:
 
             self.ranges.append(r)
 
-
     def map(self, v: int) -> int:
         if v > self.range_max or v < self.range_min:
             return v
-    
+
         for r in self.ranges:
             if r.source <= v < r.source_end:
                 return v + r.offset
@@ -63,19 +62,18 @@ def star2():
 
     for i in range(0, len(seeds), 2):
         start = seeds[i]
-        length = seeds[i+1]
+        length = seeds[i + 1]
         print(start, length)
         _maps = maps.values()
         for x in range(start, start + length):
-            #print("seed", x)
+            # print("seed", x)
             for v in _maps:
                 x = v.map(x)
-                #print(k, x)
+                # print(k, x)
             if x < min_loc:
                 min_loc = x
 
     print("min location", min_loc)
-
 
 
 star2()
